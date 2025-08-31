@@ -2,37 +2,6 @@
 
 A professional, fast site with a paper-summaries section (Markdown-based) and a web CV.
 
-## 1) Install prerequisites (Windows 11)
-
-1. **Node.js LTS** (v22.x recommended) — download from <https://nodejs.org/en> and install with default options.
-2. **Git for Windows** — download from <https://git-scm.com/download/win> and install with default options.
-3. **VS Code** (optional but recommended) — <https://code.visualstudio.com/>
-
-> To verify installation, open **PowerShell** and run:
-```powershell
-node -v
-npm -v
-git --version
-```
-
-## 2) Create the GitHub repository
-
-1. Create a new repository named **`lukaszsawala.github.io`** (this enables the special *user site* domain).
-2. Do **not** initialize with any files (we'll push from local).
-
-## 3) Start the project locally
-
-```powershell
-# 1) Unzip this starter somewhere (e.g., Documents)
-# 2) In PowerShell, cd to the folder:
-cd .\lukasz-website-starter
-
-# 3) Install dependencies
-npm install
-
-# 4) Start the dev server (http://localhost:5173)
-npm run dev
-```
 
 ## 4) Customize content
 
