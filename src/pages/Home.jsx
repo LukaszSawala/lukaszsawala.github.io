@@ -25,19 +25,22 @@ export default function Home() {
       </div>
 
       <div className="mt-12 grid md:grid-cols-3 gap-6">
-        <Card title="CV" desc="Education, experience, skills" href="/cv" />
-        <Card title="Projects" desc="Selected academic & hobby projects" href="/projects" />
-        <Card title="Paper Summaries" desc="My notes & takeaways from research papers" href="/papers" />
+        <Card title="CV" desc="Education, experience, skills" to="/cv" />
+        <Card title="Projects" desc="Selected academic & hobby projects" to="/projects" />
+        <Card title="Paper Summaries" desc="My notes & takeaways from research papers" to="/papers" />
       </div>
+
     </section>
   )
 }
 
-function Card({ title, desc, href }) {
+import { Link } from "react-router-dom";
+
+function Card({ title, desc, to }) {
   return (
-    <a href={href} className="block border rounded-2xl p-6 hover:shadow-md transition bg-white">
+    <Link to={to} className="block border rounded-2xl p-6 hover:shadow-md transition bg-white">
       <h3 className="font-semibold">{title}</h3>
       <p className="text-sm text-zinc-600 mt-1">{desc}</p>
-    </a>
+    </Link>
   )
 }
