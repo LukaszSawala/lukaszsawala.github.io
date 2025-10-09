@@ -9,7 +9,6 @@ export default function Papers() {
         <h1 className="text-2xl font-semibold">Paper Summaries</h1>
         <a className="text-sm underline" href="https://dillinger.io/" target="_blank" rel="noreferrer">Write markdown online</a>
       </div>
-      <p className="text-zinc-600 mt-2">Each entry links to a Markdown file you can edit. Add more by copying the template in <code>/public/papers</code> and an entry in <code>src/data/papers.js</code>.</p>
 
       <div className="mt-6 grid gap-4">
         {papers.map(p => (
