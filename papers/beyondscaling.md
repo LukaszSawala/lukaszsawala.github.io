@@ -1,20 +1,7 @@
-## Scaling laws: “Beyond neural scaling laws: beating power law scaling via data pruning”
-
 ### **TL;DR**
 Scaling laws reflect average data quality. With computed loss-based pruning schedules, you can surpass expected scaling performance by training on *less* but *better* data.
 
-### **Main Ideas**
-- Not all data contributes equally; many samples actively waste compute.  
-- Compute-efficient proxy losses allow dynamically pruning unhelpful samples.  
-- Pruning early vs. late in training should target different samples.  
-- The resulting model outperforms classical power-law predictions.
-
-### **Implications / Lessons**
-- Dataset quality should be treated as a scaling axis.  
-- The “bigger is always better” assumption breaks.  
-- Properly pruned datasets bend the scaling curve downward.
-
-### **Core Contribution / Main Lesson (Practical)**
+### **Core Contribution / Main Lesson**
 If training is compute-limited, do **this**:
 
 1. **Score every sample** with a small proxy model using a loss-based metric.  
@@ -26,6 +13,18 @@ If training is compute-limited, do **this**:
 4. **Train only on the best ~30–50% of the dataset** per cycle.
 
 You will get **lower final loss with the same compute**, and often **better generalization**.
+
+
+### **Main Ideas**
+- Not all data contributes equally; many samples actively waste compute.  
+- Compute-efficient proxy losses allow dynamically pruning unhelpful samples.  
+- Pruning early vs. late in training should target different samples.  
+- The resulting model outperforms classical power-law predictions.
+
+### **Implications / Lessons**
+- Dataset quality should be treated as a scaling axis.  
+- The “bigger is always better” assumption breaks.  
+- Properly pruned datasets bend the scaling curve downward.
 
 ### **Central Claims**
 - Stage-aware pruning systematically beats full-dataset scaling.  
