@@ -1,52 +1,34 @@
+## TL;DR
+LLMs hallucinate because they optimize for plausibility, not truth. Grounding via retrieval, tools, or verification is required to reduce hallucinations reliably.
 
-### **TL;DR**
-Hallucinations are the optimal output under uncertainty because LLMs model text distributions, not facts. Eliminating hallucination requires grounding, not more training.
+## Core Contribution / Main Lesson
+If your LLM hallucinates:
 
+1. **Retrieval-Augmented Generation (RAG):** force conditioning on external context before generating.  
+2. **Tool use:** calculator, search APIs, structured databases. Remember - if an intern cannot use a tool, an agent cannot as well (use well-structured tools with easy calls)
+3. **Verify-then-generate:** ask model to confirm correctness against retrieved info.  
+4. **Self-consistency / majority voting** for critical outputs.  
+5. **Constrain decoding:** lower temperature, limit tokens, enforce grammar/regex.  
+6. **Behaviour prompting with penalties:** answer only if confidence > threshold t; otherwise output “I don’t know” to encourage correct uncertainty reporting.
 
-### **Core Contribution / Main Lesson**
-When your model hallucinates, **do not attempt more fine-tuning**.  
-Do **one or more** of these instead:
+Outcome: Hallucinations drop significantly while maintaining fluent outputs.
 
-1. **Add retrieval grounding (RAG):**  
-   Force the model to condition on retrieved context *before* generating answers.
+## Main Ideas
+- Next-token prediction favors **plausibility over correctness**.  
+- Truth evaluation is often impossible during pretraining; syntax and probability patterns dominate.  
+- Larger models hallucinate less frequently but more confidently.  
+- Pretraining is **distribution learning**, post-training optimizes performance metrics; expressing uncertainty is often penalized, not rewarded.
 
-2. **Introduce tool-use:**  
-   - calculator for numbers  
-   - search API for facts  
-   - database queries for structured info
-   Remember: **if an intern cannot use a tool, neither can you agent.**
-
-3. **Use “verify-then-generate”:**  
-   Prompt the model to check sources or retrieved context before output.
-
-4. **Use self-consistency or majority voting** for critical tasks.  
-
-5. **Constrain decoding**  
-   - lower temperature  
-   - limit token budget  
-   - use constrained generation frameworks (regex, grammar models).
-
-6. **Expose uncertainty:**  
-   Ask the model to report confidence, measure it directly or identify unclear parts to avoid confident hallucinations.
-
-These are the only reliable ways to reduce hallucinations *in production*.
+## Implications / Lessons
+- Hallucination is **structural**, not a bug.  
+- Scaling or architecture changes alone **won’t eliminate it**.  
+- Reliable methods require **external grounding or verification**.
 
 
-### **Main Ideas**
-- Next-token prediction rewards plausibility, not truth.  
-- Under uncertainty, the model must choose a single token → hallucination.  
-- Larger models hallucinate less often but more confidently.  
-- Hallucination is structurally built into the objective.
-
-### **Implications / Lessons**
-- No amount of raw scaling eliminates hallucinations.  
-- Architecture is not the bottleneck; the objective is.  
-- Grounding or verification is required for factuality.
-
-### **Central Claims**
-- Hallucination is unavoidable without external grounding.  
-- Fluent guessing is an inherent property of the training objective.  
-- Grounding is the only path to truth.
+## Central Claims
+- Hallucinations are unavoidable without grounding.  
+- Fluent guessing is inherent to next-token objectives.  
+- Post-training metrics should **reward correct uncertainty**.
 
 **Paper link:**  
 TBD

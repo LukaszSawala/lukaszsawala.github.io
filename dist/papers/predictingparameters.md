@@ -1,35 +1,34 @@
-### **TL;DR**
-Neural networks have predictable weight structure; most parameters can be reconstructed from a small subset. But pseudo-inverse instability limits scalability.
+## TL;DR
+Most network parameters are redundant. A small subset (~5–10%) can reconstruct the rest with linear predictors and pseudo-inverse, enabling compression and faster training.
 
-### **Core Contribution / Main Lesson**
-If you want to compress or accelerate model training, try this workflow:
+## Core Contribution / Main Lesson
+To compress or accelerate a model:
 
-1. **Select anchor weights** (e.g., every k-th neuron or spatial position).  
-2. **Train a parameter predictor** (low-rank basis, regression, etc.).  
-3. **Predict missing parameters** instead of storing or training them fully.  
-4. **Check conditioning** of the reconstruction matrix:  
-   - if condition number is high → reduce layer size, increase anchors.  
-5. **Use this primarily for CNNs**, where spatial structure makes prediction stable.
+1. **Select anchor weights** (spatially or randomly).  
+2. **Train parameter predictors** (low-rank regression or pseudo-inverse).  
+3. **Predict remaining parameters** rather than storing them.  
+4. **Check conditioning**; if poor, adjust anchors or layer size.  
+5. **Apply mostly to structured layers** (CNNs) where smoothness exists.
 
-This gives you significant **compression or faster training** if the network has smooth weight structure.
+Outcome: Significant **compression and faster training** with negligible performance loss.
+
+## Main Ideas
+- CNNs learn structured filters; many parameters are predictable from a few anchors.  
+- Distinguish **active** vs **passive** parameters.  
+- Lora-style decomposition: W ≈ UV; learning only V while keeping U fixed approximates full model.  
+- Pseudo-inverse allows optimal reconstruction but **conditioning can be unstable**.  
+- Realistic usage depends on **network structure** (CNNs, spatial smoothness help).
+
+## Implications / Lessons
+- Parameter count ≠ effective degrees of freedom.  
+- Exploit low-dimensional structure for **compression and efficiency**.  
+- Be cautious of **numerical instability** when scaling to large layers.
 
 
-### **Main Ideas**
-- Trained weights lie on low-dimensional manifolds.  
-- A small subset (~5–10%) can recover most of the model performance.  
-- Reconstruction uses linear predictors + pseudo-inverse.  
-- Large layers are numerically unstable.
-
-### **Implications / Lessons**
-- Parameter count is not equal to effective degrees of freedom.  
-- Strong structural correlations exist in weights.  
-- Practical deployment is limited by matrix conditioning.
-
-
-### **Central Claims**
+## Central Claims
 - Most weights are redundant.  
-- Low-dimensional structure is real but fragile.  
-- Numerical conditioning limits scalability.
+- Low-dimensional structure is exploitable but fragile.  
+- Conditioning limits naive scalability.
 
 **Paper link:**  
 TBD
