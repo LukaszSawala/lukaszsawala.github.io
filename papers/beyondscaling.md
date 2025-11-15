@@ -1,35 +1,45 @@
-### **TL;DR**
-Scaling laws reflect average data quality. With computed loss-based pruning schedules, you can surpass expected scaling performance by training on *less* but *better* data.
+## TL;DR
+Most training data contributes nothing to final performance. Using self-supervised pruning (latent k-means hardship scoring), you can remove 20–80% of the dataset with no performance loss, bending scaling curves downwards. Hard vs. easy samples must be selected depending on data availability.
 
-### **Core Contribution / Main Lesson**
-If training is compute-limited, do **this**:
+## Core Contribution / Main Lesson
+If you want **compute-efficient training**:
 
-1. **Score every sample** with a small proxy model using a loss-based metric.  
-2. **Sort by loss** and prune:  
-   - early training → prune *high-loss, chaotic, noisy* samples  
-   - mid training → prune *redundant medium-loss* samples  
-   - late training → prune *low-loss, already-learned* samples  
-3. **Repeat scoring every few training stages** (“dynamic pruning”).  
-4. **Train only on the best ~30–50% of the dataset** per cycle.
+1. **Encode dataset** using a self-supervised model.  
+2. **Cluster latent embeddings** (k-means or similar).  
+3. **Compute “hardship”** = distance to cluster centroid.  
+4. **Prune samples** based on hardship and current data regime:
+   - abundant → keep hard  
+   - scarce → keep easy  
+5. Optional: **memorization scoring** for fine-grained pruning.  
+6. Retrain using **only the selected subset**.  
+7. Monitor **OOD and validation performance** to avoid hidden degradation.
 
-You will get **lower final loss with the same compute**, and often **better generalization**.
+## Main Ideas
+- Classical exponential error reduction has slowed; simply adding data gives diminishing returns.  
+- **Most samples are redundant**: e.g., reducing cross-entropy from 3.4 → 2.8 requires ~10× more data.  
+- Standard supervised pruning fails at scale — label dependence doesn't work for trillion-token regimes.  
+- The authors propose **latent-space k-means**:
+  - train a self-supervised encoder–decoder  
+  - cluster representations  
+  - define **“hardship”** as distance to centroid  
+- Rule of thumb (very important):  
+  - **Abundant data → keep hard samples**  
+  - **Scarce data → keep easy samples**  
+- A second method: **memorization-based importance** — measure how much including a sample raises its predicted probability; high-gain samples are important.  
+- Key concern: **scaling to LLM datasets is unproven**, and **in RL, pruning only hard examples may be harmful**.
+
+## Implications / Lessons
+- Dataset quality can be a **scaling axis**: bigger isn’t always better.  
+- Self-supervised pruning allows massive compute savings.  
+- Selection strategies must account for **data abundance** and **task type**.
 
 
-### **Main Ideas**
-- Not all data contributes equally; many samples actively waste compute.  
-- Compute-efficient proxy losses allow dynamically pruning unhelpful samples.  
-- Pruning early vs. late in training should target different samples.  
-- The resulting model outperforms classical power-law predictions.
+Outcome: same or better performance with less compute; scaling curves bend downward.
 
-### **Implications / Lessons**
-- Dataset quality should be treated as a scaling axis.  
-- The “bigger is always better” assumption breaks.  
-- Properly pruned datasets bend the scaling curve downward.
-
-### **Central Claims**
-- Stage-aware pruning systematically beats full-dataset scaling.  
-- Loss signals can be estimated cheaply with proxy models.  
-- Scaling depends on data curation, not just size.
+## Central Claims
+- Stage-aware, self-supervised pruning **beats naive full-dataset scaling**.  
+- Most data points are redundant; some actively waste compute.  
+- Pruning strategy depends on **dataset size, model size, and task**.
 
 **Paper link:**  
 TBD

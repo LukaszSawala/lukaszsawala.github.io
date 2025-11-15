@@ -1,32 +1,33 @@
-### **TL;DR**
-AdamW applies weight decay correctly by separating it from gradient updates, fixing Adam’s flawed regularization.
+## TL;DR
+AdamW fixes Adam’s flawed regularization by decoupling weight decay from gradients, enabling better generalization and independent tuning of learning rate and decay.
 
-### **Core Contribution / Main Lesson**
-When training any modern neural network, do:
+## Core Contribution / Main Lesson (Practical)
+For modern NN training:
 
-1. **Switch from Adam to AdamW** whenever weight decay is needed.  
-2. **Set weight decay explicitly** (typical 0.01 for many models).  
-3. **Tune learning rate and weight decay separately** — they no longer interact.  
-4. **Apply weight decay only to weights**, not biases or layernorm parameters.  
-5. **Use AdamW for practically all transformer-based architectures.**
+1. **Switch Adam → AdamW**.  
+2. **Apply weight decay only to weights**, not biases/LayerNorm.  
+3. **Tune learning rate and decay independently**.  
+4. Use **warm restarts**: cyclically reset LR to explore new minima.  
+5. **Per-parameter LR schedulers**: scale learning rate per parameter group if needed.  
+6. Choose weight decay based on **planned number of batch passes**.
 
+Outcome: better generalization, more predictable optimization, avoids Adam’s L2 flaw.
 
-### **Main Ideas**
-- Adam’s standard L2 regularization isn't actual weight decay.  
-- Adaptive gradient scaling corrupts the intended shrinkage.  
-- AdamW decouples parameter shrinkage from the gradient step.
+## Main Ideas
+- Standard Adam L2 regularization ≠ true weight decay due to adaptive updates.  
+- Weight decay should be **decoupled** from gradient step; AdamW achieves this.  
+- Optimal weight decay depends on **total number of updates**: more updates → smaller decay.  
+- Warm restarts and per-parameter learning rate schedules further improve convergence.
 
-### **Implications / Lessons**
+## Implications / Lessons
 - Proper regularization improves generalization.  
-- Weight decay and learning rate become independent.  
-- AdamW is more stable and predictable.
+- Decoupled weight decay allows **independent LR and decay tuning**.  
+- Momentum or adaptive optimizers alone do not guarantee proper L2 shrinkage.
 
-This leads to **better generalization**, easier hyperparameter tuning, and avoids Adam’s incorrect L2 behavior.
-
-### **Central Claims**
-- L2 regularization ≠ weight decay in adaptive optimizers.  
+## Central Claims
+- L2 ≠ weight decay in adaptive optimizers.  
 - Decoupling restores theoretical correctness.  
-- AdamW is empirically superior.
+- AdamW empirically outperforms standard Adam.
 
 **Paper link:**  
 TBD
